@@ -31,15 +31,15 @@
 <body>
 <div class="wrap">
   <h1>📘 Manual — Prospector de Sites</h1>
-  <div class="versao">Versão 2.1.0</div>
-  <p>Este plugin acha clientes com sites ruins no Google Maps, refaz as páginas com padrão profissional, publica na sua hospedagem e envia a proposta — e você administra tudo num painel (CRM) que roda no seu computador, de graça.</p>
+  <div class="versao">Versão 2.1.0 · fork VPS</div>
+  <p>Este plugin acha clientes com sites ruins no Google Maps, refaz as páginas com padrão profissional, publica na sua VPS e envia a proposta — e você administra tudo num painel (CRM) que roda no seu computador, de graça.</p>
 
   <div class="toc">
     <b>Neste manual:</b><br>
     <a href="#requisitos">1. O que você precisa antes</a> ·
     <a href="#setup">2. Configuração (uma vez só)</a> ·
     <a href="#ciclo">3. O ciclo completo</a> ·
-    <a href="#publicacao">4. Publicação automática (sem login!)</a> ·
+    <a href="#publicacao">4. Publicação na VPS</a> ·
     <a href="#dashboard">5. O dashboard (CRM)</a> ·
     <a href="#mac">6. E no Mac?</a> · <a href="#faq">7. Problemas comuns</a>
   </div>
@@ -50,15 +50,15 @@
     <li><b>Extensão Claude in Chrome</b> conectada — é ela que navega no Google Maps.</li>
     <li><b>Conector do Gmail</b> ativo (Configurações → Conectores) — rascunhos de proposta e leitura de respostas.</li>
     <li><b>Conector do Google Drive</b> — planilha de leads no Google Sheets.</li>
-    <li><b>Hospedagem HostGator</b> (plano M ou superior, que aceita vários sites) com os dados do cPanel em mãos: usuário, domínio e servidor (aparecem na tela inicial do cPanel, coluna "General Information").</li>
+    <li><b>Uma VPS própria</b> com Nginx + Traefik configurados (proxy reverso com HTTPS automático via Let's Encrypt) e um domínio apontando pro IP dela. Você também precisa do IP público, do usuário SSH (geralmente <code>ubuntu</code>) e do caminho local da sua chave <code>.pem</code>/<code>.key</code>.</li>
     <li><b>Uma pasta conectada no Cowork</b> (ex.: "Clientes") — tudo fica salvo nela.</li>
   </ul>
 
   <h2 id="setup">2. Configuração (uma vez só)</h2>
   <ol>
     <li>Digite <span class="cmd">/setup</span> no Cowork e responda: sua assinatura (nome, apresentação, WhatsApp), nichos preferidos, cidade e quantos leads por busca.</li>
-    <li><b>Dados da HostGator: tudo no dashboard, nada no chat.</b> Abra o dashboard (<code>iniciar-dashboard.bat</code>) → aba <b>Configurações</b> → seção <b>Conexão HostGator</b> → preencha usuário, domínio, servidor (os três estão na tela inicial do cPanel, coluna "General Information") e a senha → <b>Salvar conexão</b>. Tudo vai direto pro arquivo no seu computador — o chat nunca vê.</li>
-    <li>O Claude faz um teste de publicação e te entrega este manual + o dashboard prontos na pasta.</li>
+    <li><b>Dados da VPS: informados direto no chat</b> (não são credencial sensível tipo senha — é infraestrutura sua). Informe IP público, usuário SSH, caminho local da chave SSH, domínio principal e a pasta remota onde os sites ficam (padrão <code>~/clientes-prospector</code>). A chave SSH em si nunca é lida nem exibida — só o caminho do arquivo.</li>
+    <li>O Claude faz um teste de publicação (sobe uma página de teste via SSH e confirma HTTPS) e te entrega este manual + o dashboard prontos na pasta.</li>
   </ol>
   <div class="box dica">💡 Preencha também seus dados de contratante na aba <b>Configurações</b> do dashboard — todo contrato já sai com eles.</div>
 
@@ -68,7 +68,7 @@
     <tr><td><span class="cmd">/prospectar</span></td><td>Varre o Google Maps: negócios nota ≥ 4.7 com site fraco E e-mail público. Gera planilha no Google Sheets + alimenta o dashboard.</td></tr>
     <tr><td><span class="cmd">/redesenhar</span></td><td>Recria as páginas dos melhores leads (5+ por lote) mantendo conteúdo, fotos e logo REAIS. Entrega: página + editor visual + comparador antes/depois.</td></tr>
     <tr><td><span class="cmd">/editor</span></td><td>Quer mexer em texto ou foto? Abre a versão editável no navegador — clica, edita, exporta.</td></tr>
-    <tr><td><span class="cmd">/publicar</span></td><td>Sobe página + capa de apresentação na HostGator e valida o HTTPS (cadeado).</td></tr>
+    <tr><td><span class="cmd">/publicar</span></td><td>Sobe página + capa de apresentação na sua VPS via SSH e valida o HTTPS (cadeado).</td></tr>
     <tr><td><span class="cmd">/proposta</span></td><td>Escreve o e-mail (elogio real + defeito objetivo + link da capa), passa na checklist anti-spam e deixa o rascunho no Gmail.</td></tr>
     <tr><td><span class="cmd">/respostas</span></td><td>Lê o Gmail e move sozinho no painel quem respondeu. Dica: peça pro Claude agendar todo dia às 9h.</td></tr>
     <tr><td><span class="cmd">/followup</span></td><td>3+ dias sem resposta? Gera o lembrete gentil (1 por cliente, nunca repete).</td></tr>
@@ -76,18 +76,17 @@
   </table>
   <div class="box aviso">⚠️ A regra de ouro do redesign: <b>nada é inventado</b>. Serviços, credenciais e fotos vêm do site real do cliente. O texto é reescrito com técnica — dizendo a mesma verdade.</div>
 
-  <h2 id="publicacao">4. Publicação automática — configure UMA vez e nunca mais faça login</h2>
-  <p>O segredo é a senha no arquivo (passo 2 acima). Com ela preenchida:</p>
+  <h2 id="publicacao">4. Publicação na VPS — sob demanda, sem processo de fundo</h2>
+  <p>Diferente do fluxo original do plugin (que usava HostGator com um publicador automático rodando de fundo), esta versão publica via SSH direto quando você pede:</p>
   <ol>
-    <li>Preencha a conexão HostGator no dashboard (aba Configurações), incluindo a senha.</li>
-    <li><b>Uma única vez</b>: dê um duplo clique no <code>instalar-publicador.bat</code> da sua pasta. Ele registra no Windows um publicador que verifica a fila a cada minuto, invisível. (Se reclamar de permissão: botão direito → Executar como administrador.)</li>
-    <li>Pronto: de agora em diante o <span class="cmd">/publicar</span> prepara a fila e em até 1 minuto os sites sobem SOZINHOS — sem janela, sem clique, sem cPanel. O Claude confere as URLs e o cadeado HTTPS na sequência.</li>
+    <li>Preencha os dados da VPS no <span class="cmd">/setup</span> (IP, usuário, caminho da chave, domínio, pasta remota).</li>
+    <li>Rode <span class="cmd">/publicar</span> — o Claude envia a pasta de cada cliente via <code>scp</code> pra VPS, um por vez, e confirma HTTP 200 em HTTPS antes de considerar publicado.</li>
+    <li>Não existe instalação prévia nem tarefa agendada: cada publicação acontece só quando você chama o comando, usando sua chave SSH local.</li>
   </ol>
-  <p style="font-size:13px;color:var(--muted)">Plano B manual: duplo clique no <code>publicar-agora.bat</code> publica na hora mostrando o progresso. O histórico fica em <code>publicador-log.txt</code>.</p>
-  <div class="box dica">💡 Se aparecer erro de certificado no primeiro deploy: cPanel → SSL/TLS Status → Run AutoSSL (uma vez só, leva minutos).</div>
+  <div class="box dica">💡 Se o teste de HTTPS falhar no primeiro deploy: confira se o container Nginx/Traefik da pasta de clientes está rodando na VPS (<code>docker ps</code>) e se o DNS do domínio já propagou.</div>
 
   <h2 id="dashboard">5. O dashboard (seu CRM local)</h2>
-  <p>Dê <b>dois cliques em <code>iniciar-dashboard.bat</code></b> na sua pasta (precisa de Python instalado) — abre em <code>http://localhost:8765</code> com tudo salvo no banco <code>prospector.db</code>. Sem Python, abra <code>dashboard.html</code> direto (modo leitura com edições locais).</p>
+  <p>Dê <b>dois cliques em <code>iniciar-dashboard.bat</code></b> (Windows) ou <code>iniciar-dashboard.command</code> (Mac) na sua pasta (precisa de Python instalado) — abre em <code>http://localhost:8765</code> com tudo salvo no banco <code>prospector.db</code>. Sem Python, abra <code>dashboard.html</code> direto (modo leitura com edições locais).</p>
   <ul>
     <li><b>Visão geral</b> — números do funil e receita.</li>
     <li><b>Pipeline</b> — kanban: arraste o card conforme o cliente avança. Ao soltar em "Fechado", informe o valor — a receita soma na hora.</li>
@@ -97,29 +96,29 @@
     <li><b>Follow-ups</b> — quem está parado há dias, com alerta laranja.</li>
     <li><b>Contratos</b> — ver a folha, imprimir, baixar o Word travado, marcar assinado.</li>
     <li><b>Financeiro</b> — recebido, a receber, MRR das manutenções e projeção 12 meses.</li>
-    <li><b>Configurações</b> — seus dados de contratante + conexão HostGator com a senha (preencha uma vez; a senha nunca passa pelo chat).</li>
+    <li><b>Configurações</b> — seus dados de contratante (os dados da VPS ficam no <code>prospector-config.json</code>, configurados pelo <span class="cmd">/setup</span>).</li>
   </ul>
 
   <h2 id="mac">6. E no Mac?</h2>
-  <p>Tudo funciona igual — só mudam os arquivos de clique duplo: <code>iniciar-dashboard.command</code> (painel), <code>publicar-agora.command</code> (publicação manual) e <code>instalar-publicador.command</code> (publicador automático via launchd, uma vez só). O /setup entrega os arquivos certos pro seu sistema.</p>
-  <div class="box dica">💡 Na primeira abertura o macOS pode bloquear por segurança: clique com o botão direito no arquivo → <b>Abrir</b> → Abrir. Só na primeira vez. Python 3: se não tiver, <code>brew install python3</code> ou python.org.</div>
+  <p>Tudo funciona igual — só muda o arquivo de clique duplo do dashboard: <code>iniciar-dashboard.command</code>. A publicação (<span class="cmd">/publicar</span>) roda direto pelo Claude via SSH, sem arquivo de clique duplo separado, então funciona igual em Windows e Mac.</p>
+  <div class="box dica">💡 Na primeira abertura do dashboard o macOS pode bloquear por segurança: clique com o botão direito no arquivo → <b>Abrir</b> → Abrir. Só na primeira vez. Python 3: se não tiver, <code>brew install python3</code> ou python.org.</div>
   <h2 id="faq">7. Problemas comuns</h2>
   <h3>O comparador não apareceu depois do /redesenhar</h3>
   <p>Peça: "gere o comparar.html e atualize o dashboard". A partir da v0.11.1 a entrega é travada e ele sempre vem — e também fica na aba <b>Comparador</b> do dashboard.</p>
-  <h3>Pede login no cPanel toda hora</h3>
-  <p>Falta a senha da HostGator. Abra o dashboard → Configurações → Conexão HostGator, cole a senha e salve — o fluxo vira automático. Cada pasta conectada tem o próprio config.</p>
-  <h3>Meu link parece estranho / domínio cheio de números</h3>
-  <p>Você está usando o subdomínio temporário da HostGator. Ative seu domínio próprio (grátis no plano — cPanel → Domains) e atualize o campo domínio nas Configurações do dashboard. Link bonito = cliente confiante; o plugin segura as propostas enquanto o domínio for o temporário.</p>
+  <h3>O /publicar falha ou não confirma HTTPS</h3>
+  <p>Confira: (1) o caminho da chave SSH no config está correto e com permissão de leitura; (2) o IP e usuário SSH estão certos — teste manualmente com <code>ssh -i chave usuario@ip</code>; (3) o container Nginx/Traefik da pasta de clientes está rodando na VPS; (4) o domínio já propagou (<code>dig dominio.com.br</code>).</p>
+  <h3>Meu domínio ainda não está configurado</h3>
+  <p>Sem domínio próprio apontando pra VPS, o HTTPS não emite certificado. Configure o registro DNS tipo A do seu domínio pro IP da VPS antes de rodar o <span class="cmd">/setup</span> — a propagação pode levar de minutos a algumas horas.</p>
   <h3>Meu e-mail pode cair no spam?</h3>
   <p>A checklist anti-spam do /proposta existe pra isso: 1 link só, sem palavras de vendedor, sem anexo, assunto-pergunta personalizado, envio 1 a 1 da sua conta. Mantenha poucos envios por dia — padrão humano.</p>
   <h3>O lado "Antes" do comparador fica em branco</h3>
   <p>Alguns sites antigos bloqueiam visualização embutida. Use o link "abrir ↗" no cabeçalho da coluna.</p>
   <h3>O dashboard diz "modo arquivo"</h3>
-  <p>Você abriu o <code>dashboard.html</code> direto. Pra salvar no banco, abra pelo <code>iniciar-dashboard.bat</code> (requer Python: <code>python.org/downloads</code>, marque "Add to PATH").</p>
+  <p>Você abriu o <code>dashboard.html</code> direto. Pra salvar no banco, abra pelo <code>iniciar-dashboard.bat</code>/<code>.command</code> (requer Python: <code>python.org/downloads</code>, marque "Add to PATH" no Windows).</p>
   <h3>Lead sem e-mail?</h3>
   <p>O plugin descarta e busca outro — proposta vai por e-mail. Pros descartados com WhatsApp, peça o texto adaptado pro zap.</p>
 
-  <p style="margin-top:34px;color:var(--muted);font-size:13px">Prospector de Sites · por Helio Arreche (@helioarreche) · Este manual acompanha o plugin e é atualizado a cada versão.</p>
+  <p style="margin-top:34px;color:var(--muted);font-size:13px">Prospector de Sites · baseado no plugin original de Helio Arreche (@helioarreche) · fork adaptado para publicação em VPS própria via SSH.</p>
 </div>
 </body>
 </html>

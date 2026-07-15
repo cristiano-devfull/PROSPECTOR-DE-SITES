@@ -1,10 +1,10 @@
 {
-  "name": "arrecheneto-plugins",
+  "name": "cristiano-plugins",
   "owner": {
-    "name": "Helio Arreche"
+    "name": "Cristiano Araujo"
   },
   "metadata": {
-    "description": "Plugins de IA para negócios do Helio Arreche",
+    "description": "Plugins de IA para negócios do Cristiano Araujo",
     "version": "2.1.0",
     "autoUpdate": true
   },
@@ -14,7 +14,7 @@
       "source": "./prospector-de-sites",
       "description": "Prospecção semi-automática com CRM local: encontra negócios bem avaliados com sites ruins no Google Maps, redesenha as páginas com estética premium (editor visual + comparador antes/depois), publica na HostGator sozinho (publicador automático + HTTPS), envia proposta anti-spam com página-capa personalizada via Gmail, faz follow-up, lê as respostas e gera contrato em Word travado — tudo administrado num dashboard local com kanban e financeiro. Comece pelo /setup.",
       "author": {
-        "name": "Helio Arreche"
+        "name": "Cristiano Araujo"
       },
       "keywords": [
         "prospeccao",
