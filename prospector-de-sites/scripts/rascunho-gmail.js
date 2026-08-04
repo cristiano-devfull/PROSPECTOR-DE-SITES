@@ -60,14 +60,34 @@ async function autenticar() {
 }
 
 function criarMensagemBase64(para, assunto, corpo) {
+  // Converte URLs no corpo em ancoras HTML clicaveis
+  const corpoHtml = corpo
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1">$1</a>')
+    .replace(/\n/g, '<br>');
+
+  const boundary = 'boundary_' + Date.now();
   const mensagem = [
     `To: ${para}`,
     `Subject: =?UTF-8?B?${Buffer.from(assunto).toString('base64')}?=`,
     'MIME-Version: 1.0',
+    `Content-Type: multipart/alternative; boundary="${boundary}"`,
+    '',
+    `--${boundary}`,
     'Content-Type: text/plain; charset=utf-8',
     'Content-Transfer-Encoding: base64',
     '',
     Buffer.from(corpo).toString('base64'),
+    '',
+    `--${boundary}`,
+    'Content-Type: text/html; charset=utf-8',
+    'Content-Transfer-Encoding: base64',
+    '',
+    Buffer.from(`<html><body style="font-family:Arial,sans-serif;font-size:15px;line-height:1.6;color:#222;">${corpoHtml}</body></html>`).toString('base64'),
+    '',
+    `--${boundary}--`,
   ].join('\n');
 
   return Buffer.from(mensagem).toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
