@@ -1,0 +1,15 @@
+# Credenciais sensíveis — NUNCA subir para o GitHub
+credentials.json
+gmail-token.json
+
+# Node
+node_modules/
+npm-debug.log
+
+# Resultados de prospecção (ficam só local)
+prospector-resultado-*.json
+prospeccao.json
+leads_prospeccao.csv
+
+# macOS
+.DS_Store
