@@ -107,3 +107,31 @@ Content-Type: application/json
 ```
 
 Sugerir próximo passo: abrir o dashboard e na aba GMB clicar em WhatsApp para abordar os leads.
+
+## Saída — Parte 3: Página de preview individual por lead
+
+Para cada lead coletado que tiver WhatsApp, gerar uma página HTML de proposta individual em `gmb/preview-[slug-lead].html` usando o template `gmb-preview-template.html` da skill.
+
+Substituir os placeholders:
+- `{{NOME_CLIENTE}}` → nome do lead
+- `{{WHATSAPP_PROSPECTOR}}` → WhatsApp do contratante do config (formato 55DDDnúmero)
+- `{{WHATSAPP_PROSPECTOR_FORMATADO}}` → WhatsApp formatado (85) 98835-9720
+- `{{NOME_PROSPECTOR}}` → nome do contratante do config
+- `{{ITENS_ANTES}}` → lista dos problemas encontrados no GMB do lead (sem descrição, sem serviços, etc) em formato:
+  `<div class="comp-item"><div class="ic x">✕</div><span>[problema]</span></div>`
+- `{{ITENS_DEPOIS}}` → lista do que será entregue em formato:
+  `<div class="comp-item"><div class="ic ok">✓</div><span>[melhoria]</span></div>`
+- `{{CATEGORIAS}}` → tags HTML com as categorias sugeridas (principal com classe "principal")
+- `{{DESCRICAO}}` → descrição otimizada gerada
+- `{{N_SERVICOS}}` → número de serviços
+- `{{SERVICOS}}` → lista de serviços em formato:
+  `<div class="servico-item"><span class="si-nome">[nome]</span><span class="si-desc">[descrição]</span></div>`
+- `{{AREAS}}` → tags HTML com as áreas de atendimento
+- `{{FOTOS}}` → lista de orientações de fotos em tags
+- `{{POSTS}}` → 4 cards de posts em formato:
+  `<div class="post-card"><div class="post-semana">Semana N</div><div class="post-titulo">[título]</div><div class="post-texto">[texto]</div><div class="post-cta">→ [CTA]</div></div>`
+
+Após gerar, atualizar a mensagem do WhatsApp no banco com o link da página:
+`POST /api/leads-gmb/[slug]` com `{"urlPreview": "gmb/preview-[slug].html"}`
+
+E atualizar a mensagem padrão do WhatsApp para incluir o link da página publicada (quando disponível).

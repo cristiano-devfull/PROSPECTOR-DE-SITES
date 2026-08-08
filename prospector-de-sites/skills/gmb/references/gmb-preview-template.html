@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proposta GMB — {{NOME_CLIENTE}}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --dark:#0F1623;--dark2:#1A2336;--gold:#2A8C7A;--gold2:#1F6B5C;
+  --light:#F7F5F0;--white:#fff;--ink:#1A1A2E;--muted:#6B7280;--line:#E5E0D8;
+  --warn:#C98A2D;--ok:#6A9B72;
+  --serif:'Playfair Display',Georgia,serif;--sans:'Inter',system-ui,sans-serif;
+}
+body{font-family:var(--sans);color:var(--ink);background:var(--white);overflow-x:hidden}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0F1623 0%,#1A2336 60%,#0D1520 100%);padding:60px clamp(20px,5vw,80px) 50px;text-align:center}
+.hero-kicker{display:inline-flex;align-items:center;gap:8px;background:rgba(42,140,122,0.15);border:1px solid rgba(42,140,122,0.3);color:#4ECDB4;font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:20px}
+.hero h1{font-family:var(--serif);font-size:clamp(28px,4vw,48px);font-weight:700;color:#fff;line-height:1.15;margin-bottom:12px}
+.hero h1 em{color:#4ECDB4;font-style:normal}
+.hero-sub{color:rgba(255,255,255,0.6);font-size:16px;line-height:1.6;max-width:560px;margin:0 auto 32px}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#fff;font-weight:700;font-size:15px;padding:14px 28px;border-radius:10px;text-decoration:none;transition:.2s}
+.btn-primary:hover{background:var(--gold2);transform:translateY(-1px)}
+
+/* ANTES/DEPOIS */
+.comparativo{padding:60px clamp(20px,5vw,60px);background:var(--light)}
+.sec-label{font-size:11px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.sec-title{font-family:var(--serif);font-size:clamp(24px,3vw,36px);font-weight:700;color:var(--ink);margin-bottom:8px;line-height:1.2}
+.sec-sub{font-size:15px;color:var(--muted);margin-bottom:40px;line-height:1.6}
+.comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.comp-card{border-radius:16px;padding:28px;border:1px solid var(--line)}
+.comp-card.antes{background:#fff;border-color:#E5E0D8}
+.comp-card.depois{background:var(--dark);border-color:rgba(42,140,122,0.3)}
+.comp-header{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.comp-badge{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border-radius:100px}
+.comp-badge.antes{background:#FEE2E2;color:#DC2626}
+.comp-badge.depois{background:rgba(42,140,122,0.2);color:#4ECDB4}
+.comp-title{font-weight:700;font-size:14px}
+.comp-card.antes .comp-title{color:var(--ink)}
+.comp-card.depois .comp-title{color:#fff}
+.comp-item{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;font-size:13.5px;line-height:1.5}
+.comp-item .ic{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;margin-top:1px}
+.comp-item .ic.x{background:#FEE2E2;color:#DC2626}
+.comp-item .ic.ok{background:rgba(42,140,122,0.15);color:#2A8C7A}
+.comp-card.antes .comp-item span{color:var(--muted)}
+.comp-card.depois .comp-item span{color:rgba(255,255,255,0.75)}
+
+/* SEÇÕES DO PERFIL OTIMIZADO */
+.perfil{padding:60px clamp(20px,5vw,60px);background:#fff}
+.perfil-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:40px}
+.perfil-bloco{background:var(--light);border-radius:16px;padding:24px;border:1px solid var(--line)}
+.perfil-bloco h3{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--ink);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.tag{display:inline-block;background:rgba(42,140,122,0.1);color:var(--gold);font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px;margin:3px 3px 3px 0}
+.tag.principal{background:var(--gold);color:#fff}
+.descricao-box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px;font-size:13.5px;color:var(--ink);line-height:1.7}
+.servico-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:13px}
+.servico-item:last-child{border-bottom:none}
+.servico-item .si-nome{font-weight:600;color:var(--ink);min-width:160px}
+.servico-item .si-desc{color:var(--muted);font-size:12px}
+
+/* POSTS */
+.posts{padding:60px clamp(20px,5vw,60px);background:var(--light)}
+.posts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:40px}
+.post-card{background:#fff;border-radius:14px;padding:20px;border:1px solid var(--line)}
+.post-semana{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.post-titulo{font-weight:700;font-size:14px;color:var(--ink);margin-bottom:8px}
+.post-texto{font-size:12.5px;color:var(--muted);line-height:1.6;margin-bottom:12px}
+.post-cta{font-size:11px;font-weight:700;color:var(--gold)}
+
+/* CTA FINAL */
+.cta-final{background:var(--dark);padding:60px clamp(20px,5vw,60px);text-align:center}
+.cta-final h2{font-family:var(--serif);font-size:clamp(24px,3vw,36px);font-weight:700;color:#fff;margin-bottom:12px}
+.cta-final p{color:rgba(255,255,255,0.6);font-size:15px;margin-bottom:32px;max-width:480px;margin-left:auto;margin-right:auto}
+.preco-box{display:inline-flex;align-items:center;gap:24px;background:rgba(255,255,255,0.05);border:1px solid rgba(42,140,122,0.3);border-radius:16px;padding:20px 32px;margin-bottom:32px}
+.preco-item{text-align:center}
+.preco-valor{font-family:var(--serif);font-size:28px;font-weight:700;color:#4ECDB4}
+.preco-label{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px}
+
+/* RODAPÉ */
+footer{background:#080E1A;padding:24px clamp(20px,5vw,60px);text-align:center}
+footer p{font-size:12px;color:rgba(255,255,255,0.25)}
+
+/* RESPONSIVO */
+@media(max-width:700px){
+  .comp-grid{grid-template-columns:1fr}
+  .perfil-grid{grid-template-columns:1fr}
+  .preco-box{flex-direction:column;gap:16px}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-kicker">📍 Proposta exclusiva · Google Meu Negócio</div>
+  <h1>Seu negócio merece aparecer<br><em>nos primeiros do Google</em></h1>
+  <p class="hero-sub">Preparamos uma proposta personalizada para <strong style="color:#fff">{{NOME_CLIENTE}}</strong> com tudo pronto para aplicar no Google Meu Negócio e atrair mais clientes organicamente.</p>
+  <a href="https://wa.me/{{WHATSAPP_PROSPECTOR}}?text=Olá! Vi a proposta do Google Meu Negócio e quero saber mais." class="btn-primary">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.852L.057 23.885a.5.5 0 0 0 .611.611l6.042-1.476A11.953 11.953 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.96 0-3.786-.574-5.32-1.558l-.373-.232-3.862.944.97-3.743-.251-.389A9.946 9.946 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+    Quero saber mais
+  </a>
+</section>
+
+<!-- ANTES/DEPOIS -->
+<section class="comparativo">
+  <div class="sec-label">Diagnóstico</div>
+  <h2 class="sec-title">Seu perfil atual vs. como ficaria</h2>
+  <p class="sec-sub">Analisamos o seu Google Meu Negócio e identificamos o que está impedindo você de aparecer mais.</p>
+  <div class="comp-grid">
+    <div class="comp-card antes">
+      <div class="comp-header">
+        <span class="comp-badge antes">Situação atual</span>
+        <span class="comp-title">{{NOME_CLIENTE}}</span>
+      </div>
+      {{ITENS_ANTES}}
+    </div>
+    <div class="comp-card depois">
+      <div class="comp-header">
+        <span class="comp-badge depois">Com a otimização</span>
+        <span class="comp-title">Perfil otimizado</span>
+      </div>
+      {{ITENS_DEPOIS}}
+    </div>
+  </div>
+</section>
+
+<!-- PERFIL OTIMIZADO -->
+<section class="perfil">
+  <div class="sec-label">O que você recebe</div>
+  <h2 class="sec-title">Perfil completo, pronto para copiar e colar</h2>
+  <p class="sec-sub">Você só precisa logar no painel do Google Meu Negócio e aplicar. Sem precisar entender de SEO.</p>
+  <div class="perfil-grid">
+
+    <div class="perfil-bloco">
+      <h3>📂 Categorias</h3>
+      {{CATEGORIAS}}
+    </div>
+
+    <div class="perfil-bloco">
+      <h3>📝 Descrição otimizada</h3>
+      <div class="descricao-box">{{DESCRICAO}}</div>
+    </div>
+
+    <div class="perfil-bloco" style="grid-column:1/-1">
+      <h3>🛠️ Serviços sugeridos <span style="font-size:12px;font-weight:500;color:var(--muted)">({{N_SERVICOS}} serviços prontos)</span></h3>
+      {{SERVICOS}}
+    </div>
+
+    <div class="perfil-bloco">
+      <h3>📍 Áreas de atendimento</h3>
+      {{AREAS}}
+    </div>
+
+    <div class="perfil-bloco">
+      <h3>📸 Orientação de fotos</h3>
+      {{FOTOS}}
+    </div>
+
+  </div>
+</section>
+
+<!-- POSTS -->
+<section class="posts">
+  <div class="sec-label">Conteúdo pronto</div>
+  <h2 class="sec-title">4 posts mensais para manter o perfil ativo</h2>
+  <p class="sec-sub">O Google favorece perfis que postam regularmente. Entregamos os textos prontos para você subir 1 por semana.</p>
+  <div class="posts-grid">
+    {{POSTS}}
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <h2>Tudo pronto para aplicar hoje</h2>
+  <p>Entregamos o documento completo em até 24h. Você aplica no painel do GMB ou a gente aplica por você.</p>
+  <div class="preco-box">
+    <div class="preco-item">
+      <div class="preco-valor">R$ 900</div>
+      <div class="preco-label">Otimização GMB</div>
+    </div>
+    <div style="width:1px;height:40px;background:rgba(255,255,255,0.1)"></div>
+    <div class="preco-item">
+      <div class="preco-valor">R$ 2.000</div>
+      <div class="preco-label">GMB + Site novo</div>
+    </div>
+  </div>
+  <a href="https://wa.me/{{WHATSAPP_PROSPECTOR}}?text=Olá! Vi a proposta do GMB para {{NOME_CLIENTE}} e quero fechar." class="btn-primary">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.852L.057 23.885a.5.5 0 0 0 .611.611l6.042-1.476A11.953 11.953 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.96 0-3.786-.574-5.32-1.558l-.373-.232-3.862.944.97-3.743-.251-.389A9.946 9.946 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+    Quero fechar agora
+  </a>
+</section>
+
+<footer>
+  <p>Proposta preparada por {{NOME_PROSPECTOR}} · {{WHATSAPP_PROSPECTOR_FORMATADO}} · Válida por 7 dias</p>
+</footer>
+
+</body>
+</html>
