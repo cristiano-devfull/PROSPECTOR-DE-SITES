@@ -356,7 +356,8 @@ function vGmb(){
    '<span class="qt" style="font-size:11px;background:#0002;padding:1px 8px;border-radius:10px;color:var(--muted)">'+ls.length+'</span></div>'+
    '<div class="cards" style="display:flex;flex-direction:column;gap:10px;overflow-y:auto;">'+
    ls.map(function(l){
-    var wa=l.whatsapp?'<a href="https://wa.me/'+l.whatsapp+'?text=Ol%C3%A1+'+encodeURIComponent(l.nome)+'%2C+gostaria+de+apresentar+uma+proposta+de+otimiza%C3%A7%C3%A3o+do+Google+Meu+Neg%C3%B3cio." target="_blank" onclick="if(\''+l.statusGmb+'\'===\'novo\')atualizaGmb(\''+l.slug+'\',{statusGmb:\'abordado\'})" style="color:var(--ok);font-size:11px;font-weight:700;">📱 WhatsApp</a>':'';
+    var msgWa='Olá '+l.nome+'! Vi seu perfil no Google Maps e percebi que seu negócio tem ótimas avaliações mas seu Google Meu Negócio está incompleto'+(l.problemaGmb?' ('+l.problemaGmb+')':'')+'. Isso faz você perder clientes para concorrentes com perfil mais completo. Posso te entregar tudo otimizado e pronto para aplicar. Posso te mostrar como ficaria?';
+    var wa=l.whatsapp?'<a href="https://wa.me/'+l.whatsapp+'?text='+encodeURIComponent(msgWa)+'" target="_blank" onclick="if(\''+l.statusGmb+'\'===\'novo\')atualizaGmb(\''+l.slug+'\',{statusGmb:\'abordado\'})" style="color:var(--ok);font-size:11px;font-weight:700;">📱 WhatsApp</a>':'';
     var tel=l.telefone?'<span style="font-size:11px;color:var(--muted);">📞 '+l.telefone+'</span>':'';
     var email=l.email?'<a href="mailto:'+l.email+'" style="color:var(--accent);font-size:11px;">✉️ E-mail</a>':'';
     var nextSt=st==='novo'?'abordado':st==='abordado'?'respondeu':st==='respondeu'?'fechado':'';
