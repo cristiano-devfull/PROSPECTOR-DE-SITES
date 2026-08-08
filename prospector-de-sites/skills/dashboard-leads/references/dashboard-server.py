@@ -18,6 +18,8 @@ PORTA = 8765
 CAMPOS = ['slug','nome','nicho','cidade','nota','avaliacoes','email','telefone','whatsapp',
           'siteAntigo','motivo','status','urlNova','dataProposta','valor','obs',
           'contratoStatus','contratoEm','manutencao','pago','docCliente','endCliente']
+CAMPOS_GMB = ['slug','nome','nicho','cidade','nota','avaliacoes','posicao',
+              'telefone','whatsapp','email','temSite','problemaGmb','statusGmb']
 
 def conexao():
     c = sqlite3.connect(DB)
@@ -26,6 +28,11 @@ def conexao():
         email TEXT, telefone TEXT, whatsapp TEXT, siteAntigo TEXT, motivo TEXT,
         status TEXT DEFAULT 'novo', urlNova TEXT, dataProposta TEXT, valor REAL, obs TEXT,
         contratoStatus TEXT DEFAULT 'pendente', contratoEm TEXT, manutencao REAL, pago INTEGER DEFAULT 0,
+        atualizado TEXT DEFAULT (datetime('now','localtime')))''')
+    c.execute('''CREATE TABLE IF NOT EXISTS leads_gmb(
+        slug TEXT PRIMARY KEY, nome TEXT, nicho TEXT, cidade TEXT, nota REAL, avaliacoes INTEGER,
+        posicao INTEGER, telefone TEXT, whatsapp TEXT, email TEXT, temSite TEXT,
+        problemaGmb TEXT, statusGmb TEXT DEFAULT 'novo',
         atualizado TEXT DEFAULT (datetime('now','localtime')))''')
     for col, tipo in [('contratoStatus',"TEXT DEFAULT 'pendente'"),('contratoEm','TEXT'),('manutencao','REAL'),('pago','INTEGER DEFAULT 0'),('docCliente','TEXT'),('endCliente','TEXT')]:
         try: c.execute('ALTER TABLE leads ADD COLUMN %s %s' % (col, tipo))
@@ -70,6 +77,10 @@ class App(SimpleHTTPRequestHandler):
             c = conexao(); c.row_factory = sqlite3.Row
             rows = [dict(r) for r in c.execute('SELECT * FROM leads').fetchall()]; c.close()
             return self._json(200, rows)
+        if self.path.split('?')[0] == '/api/leads-gmb':
+            c = conexao(); c.row_factory = sqlite3.Row
+            rows = [dict(r) for r in c.execute('SELECT * FROM leads_gmb ORDER BY posicao').fetchall()]; c.close()
+            return self._json(200, rows)
         if self.path in ('/', ''):
             self.path = '/dashboard.html'
         return SimpleHTTPRequestHandler.do_GET(self)
@@ -78,6 +89,11 @@ class App(SimpleHTTPRequestHandler):
             l = self._corpo(); c = conexao()
             c.execute('INSERT OR REPLACE INTO leads (%s) VALUES (%s)' % (','.join(CAMPOS), ','.join('?'*len(CAMPOS))),
                       [l.get(k) for k in CAMPOS])
+            c.commit(); c.close(); return self._json(200, {'ok': True})
+        if self.path.split('?')[0] == '/api/leads-gmb':
+            l = self._corpo(); c = conexao()
+            c.execute('INSERT OR REPLACE INTO leads_gmb (%s) VALUES (%s)' % (','.join(CAMPOS_GMB), ','.join('?'*len(CAMPOS_GMB))),
+                      [l.get(k) for k in CAMPOS_GMB])
             c.commit(); c.close(); return self._json(200, {'ok': True})
         return self._json(404, {'erro': 'rota'})
     def do_PUT(self):
@@ -111,11 +127,23 @@ class App(SimpleHTTPRequestHandler):
                           ','.join('%s=?' % k for k in sets), [ch[k] for k in sets] + [slug])
                 c.commit(); c.close()
             return self._json(200, {'ok': True})
+        if len(partes) == 4 and partes[1] == 'api' and partes[2] == 'leads-gmb':
+            slug, ch = partes[3], self._corpo()
+            sets = [k for k in ch if k in CAMPOS_GMB and k != 'slug']
+            if sets:
+                c = conexao()
+                c.execute('UPDATE leads_gmb SET %s, atualizado=datetime("now","localtime") WHERE slug=?' %
+                          ','.join('%s=?' % k for k in sets), [ch[k] for k in sets] + [slug])
+                c.commit(); c.close()
+            return self._json(200, {'ok': True})
         return self._json(404, {'erro': 'rota'})
     def do_DELETE(self):
         partes = self.path.split('?')[0].split('/')
         if len(partes) == 4 and partes[1] == 'api' and partes[2] == 'leads':
             c = conexao(); c.execute('DELETE FROM leads WHERE slug=?', (partes[3],)); c.commit(); c.close()
+            return self._json(200, {'ok': True})
+        if len(partes) == 4 and partes[1] == 'api' and partes[2] == 'leads-gmb':
+            c = conexao(); c.execute('DELETE FROM leads_gmb WHERE slug=?', (partes[3],)); c.commit(); c.close()
             return self._json(200, {'ok': True})
         return self._json(404, {'erro': 'rota'})
     def log_message(self, *a): pass
