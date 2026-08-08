@@ -350,18 +350,18 @@ function vGmb(){
  '<div style="font-size:12px;color:var(--muted);margin-bottom:14px;flex:0 0 auto;">Leads coletados pelo /gmb — posições 4–15 do Maps. Arraste ou clique para mudar status.</div>'+
  '<div class="board">'+cols.map(function(c){
   var st=c[0],lb=c[1],ls=por[st]||[];
-  return '<div class="col" style="min-width:230px;max-width:260px;flex:1;display:flex;flex-direction:column;">'+
+  return '<div class="col" style="min-width:230px;max-width:260px;flex:1;display:flex;flex-direction:column;" data-tipo="gmb" ondragover="dragSobre(event)" ondragleave="dragSai(event)" ondrop="solta(event,\''+st+'\')">'+
    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">'+
    '<span style="font-weight:700;font-size:13px;color:'+colColors[st]+'">'+lb+'</span>'+
    '<span class="qt" style="font-size:11px;background:#0002;padding:1px 8px;border-radius:10px;color:var(--muted)">'+ls.length+'</span></div>'+
    '<div class="cards" style="display:flex;flex-direction:column;gap:10px;overflow-y:auto;">'+
    ls.map(function(l){
-    var wa=l.whatsapp?'<a href="https://wa.me/'+l.whatsapp+'?text=Ol%C3%A1+'+encodeURIComponent(l.nome)+'%2C+gostaria+de+apresentar+uma+proposta+de+otimiza%C3%A7%C3%A3o+do+Google+Meu+Neg%C3%B3cio." target="_blank" style="color:var(--ok);font-size:11px;font-weight:700;">📱 WhatsApp</a>':'';
+    var wa=l.whatsapp?'<a href="https://wa.me/'+l.whatsapp+'?text=Ol%C3%A1+'+encodeURIComponent(l.nome)+'%2C+gostaria+de+apresentar+uma+proposta+de+otimiza%C3%A7%C3%A3o+do+Google+Meu+Neg%C3%B3cio." target="_blank" onclick="if(\''+l.statusGmb+'\'===\'novo\')atualizaGmb(\''+l.slug+'\',{statusGmb:\'abordado\'})" style="color:var(--ok);font-size:11px;font-weight:700;">📱 WhatsApp</a>':'';
     var tel=l.telefone?'<span style="font-size:11px;color:var(--muted);">📞 '+l.telefone+'</span>':'';
     var email=l.email?'<a href="mailto:'+l.email+'" style="color:var(--accent);font-size:11px;">✉️ E-mail</a>':'';
     var nextSt=st==='novo'?'abordado':st==='abordado'?'respondeu':st==='respondeu'?'fechado':'';
     var btnNext=nextSt?'<button onclick="atualizaGmb(\''+l.slug+'\',{statusGmb:\''+nextSt+'\'})" style="font-size:10px;padding:3px 10px;border:1px solid var(--line);border-radius:6px;background:var(--paper);cursor:pointer;font-family:var(--sans);color:var(--ink);">→ '+nextSt.charAt(0).toUpperCase()+nextSt.slice(1)+'</button>':'';
-    return '<div class="card" style="--cor:'+colColors[st]+'">'+
+    return '<div class="card" draggable="true" data-tipo="gmb" ondragstart="dragTipo=\'gmb\';dragIni(event,\''+l.slug+'\')" ondragend="dragFim(event)" style="--cor:'+colColors[st]+';cursor:grab">'+
      '<div style="font-weight:700;font-size:13px;margin-bottom:4px;">'+l.nome+'</div>'+
      '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;">'+
      '<span style="font-size:10px;background:var(--paper);padding:2px 8px;border-radius:8px;color:var(--muted);">📍 '+l.posicao+'º Maps</span>'+
@@ -375,12 +375,13 @@ function vGmb(){
  }).join('')+'</div>';
 }
 function render(){nav();document.getElementById('view').innerHTML={geral:vGeral,pipeline:vPipeline,clientes:vClientes,sites:vSites,comparador:vComparador,followup:vFollowup,contratos:vContratos,gmb:vGmb,financeiro:vFinanceiro,config:vConfig}[view]()}
-var dragSlug=null;
-function dragIni(e,slug){dragSlug=slug;e.target.classList.add('arrastando');e.dataTransfer.effectAllowed='move'}
+var dragSlug=null,dragTipo='lead';
+function dragIni(e,slug){dragSlug=slug;dragTipo=e.currentTarget.dataset.tipo||'lead';e.target.classList.add('arrastando');e.dataTransfer.effectAllowed='move'}
 function dragFim(e){e.target.classList.remove('arrastando')}
 function dragSobre(e){e.preventDefault();e.dataTransfer.dropEffect='move';e.currentTarget.classList.add('alvo')}
 function dragSai(e){e.currentTarget.classList.remove('alvo')}
 function solta(e,st){e.preventDefault();e.currentTarget.classList.remove('alvo');if(!dragSlug)return;
+ if(dragTipo==='gmb'){atualizaGmb(dragSlug,{statusGmb:st});dragSlug=null;return}
  var ch={status:st};
  if(st==='fechado'){var v=prompt('Fechou! Valor cobrado (R$):','700');if(v!==null&&v!==''&&!isNaN(parseFloat(v)))ch.valor=parseFloat(v)}
  if(st==='proposta'&&!leads.filter(function(l){return l.slug===dragSlug})[0].dataProposta)ch.dataProposta=new Date().toISOString().slice(0,10);
