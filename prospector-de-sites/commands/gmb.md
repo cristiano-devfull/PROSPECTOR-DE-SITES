@@ -135,3 +135,29 @@ Após gerar, atualizar a mensagem do WhatsApp no banco com o link da página:
 `POST /api/leads-gmb/[slug]` com `{"urlPreview": "gmb/preview-[slug].html"}`
 
 E atualizar a mensagem padrão do WhatsApp para incluir o link da página publicada (quando disponível).
+
+## Pré-site no preview
+
+Ao gerar o `gmb/preview-[slug].html`, verificar se existe `sites/[slug]/[slug].html` na pasta conectada:
+
+- **Se existir** → substituir `{{URL_SITE_NOVO}}` pela URL pública do site (se publicado) ou pelo caminho local, e `{{PRESITE_CONTEUDO}}` por um `<iframe src="../../sites/[slug]/[slug].html"></iframe>`
+- **Se não existir** → substituir `{{PRESITE_CONTEUDO}}` por uma mensagem: `<div style="padding:40px;text-align:center;color:var(--muted)">Site em preparação — rode /redesenhar para gerar.</div>` e `{{URL_SITE_NOVO}}` por `em preparação`
+
+## Geração da landing page básica (quando não há site redesenhado)
+
+Se o cliente não tiver `sites/[slug]/[slug].html`, gerar uma landing page básica usando os dados coletados do Maps e do perfil GMB. Substituir no template `<template id="landing-basica">`:
+
+- `{{NICHO}}` → nicho do lead (ex: Nutricionista)
+- `{{CIDADE}}` → cidade do lead
+- `{{HEADLINE}}` → headline de benefício gerada com base no nicho (ex: "Nutrição que transforma sua saúde de verdade")
+- `{{SUBHEADLINE}}` → frase curta sobre o diferencial (ex: "Atendimento personalizado em Fortaleza e online")
+- `{{NOTA}}` → nota do Google Maps
+- `{{AVALIACOES}}` → número de avaliações
+- `{{WHATSAPP_CLIENTE}}` → WhatsApp do lead (formato 55DDDnúmero)
+- `{{STRIP_ITEMS}}` → 3-4 diferenciais do nicho em formato `<div class="strip-item">📍 [diferencial]</div>`
+- `{{SERVICOS_CARDS}}` → primeiros 6 serviços do perfil otimizado em formato card
+
+Extrair o HTML gerado do `<template>`, salvar como `gmb/landing-[slug].html` e embedar no preview via iframe:
+`<iframe src="landing-[slug].html" style="width:100%;height:500px;border:none;pointer-events:none"></iframe>`
+
+Subir também o `gmb/landing-[slug].html` na VPS junto com o preview via `/publicar --gmb`.

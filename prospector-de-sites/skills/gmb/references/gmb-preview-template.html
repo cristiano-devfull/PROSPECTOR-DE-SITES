@@ -60,6 +60,19 @@ body{font-family:var(--sans);color:var(--ink);background:var(--white);overflow-x
 .servico-item .si-nome{font-weight:600;color:var(--ink);min-width:160px}
 .servico-item .si-desc{color:var(--muted);font-size:12px}
 
+/* PRÉ-SITE */
+.presite{padding:60px clamp(20px,5vw,60px);background:var(--dark)}
+.presite .sec-label{color:rgba(42,140,122,0.9)}
+.presite .sec-title{color:#fff}
+.presite .sec-sub{color:rgba(255,255,255,0.55)}
+.presite-frame{margin-top:40px;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);box-shadow:0 40px 80px rgba(0,0,0,0.4);position:relative}
+.presite-bar{background:#1A2336;padding:12px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.presite-dot{width:10px;height:10px;border-radius:50%}
+.presite-url{background:rgba(255,255,255,0.06);border-radius:6px;padding:4px 12px;font-size:11px;color:rgba(255,255,255,0.4);font-family:monospace;margin-left:8px}
+.presite-badge{position:absolute;top:60px;right:20px;background:var(--gold);color:#fff;font-size:11px;font-weight:700;padding:6px 14px;border-radius:100px;letter-spacing:.4px;z-index:2}
+.presite-content{background:#fff;min-height:400px}
+.presite-content iframe{width:100%;height:500px;border:none;display:block;pointer-events:none}
+
 /* POSTS */
 .posts{padding:60px clamp(20px,5vw,60px);background:var(--light)}
 .posts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:40px}
@@ -171,7 +184,106 @@ footer p{font-size:12px;color:rgba(255,255,255,0.25)}
   </div>
 </section>
 
-<!-- CTA FINAL -->
+<!-- PRÉ-SITE -->
+<section class="presite">
+  <div class="sec-label">Bônus incluído</div>
+  <h2 class="sec-title">Seu site novo — já pronto</h2>
+  <p class="sec-sub">Além do Google Meu Negócio otimizado, preparamos uma versão nova do seu site com design moderno, focado em conversão e adaptado para celular.</p>
+  <div class="presite-frame">
+    <div class="presite-bar">
+      <div class="presite-dot" style="background:#FF5F57"></div>
+      <div class="presite-dot" style="background:#FEBC2E"></div>
+      <div class="presite-dot" style="background:#28C840"></div>
+      <span class="presite-url">{{URL_SITE_NOVO}}</span>
+    </div>
+    <div class="presite-badge">✨ Novo site</div>
+    <div class="presite-content">
+      {{PRESITE_CONTEUDO}}
+    </div>
+  </div>
+  <div style="display:flex;gap:24px;flex-wrap:wrap;margin-top:32px">
+    <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:rgba(255,255,255,0.6)"><span style="font-size:20px">📱</span> Responsivo para celular</div>
+    <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:rgba(255,255,255,0.6)"><span style="font-size:20px">⚡</span> Carregamento rápido</div>
+    <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:rgba(255,255,255,0.6)"><span style="font-size:20px">🎯</span> Focado em conversão</div>
+    <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:rgba(255,255,255,0.6)"><span style="font-size:20px">💬</span> WhatsApp integrado</div>
+  </div>
+</section>
+
+<!-- LANDING BÁSICA EMBUTIDA (usada quando não há site redesenhado) -->
+<template id="landing-basica">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{NOME_CLIENTE}}</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;color:#1A1A2E;background:#fff}
+.hero{background:linear-gradient(135deg,#0F1623,#1A2336);padding:60px 24px;text-align:center}
+.hero-kicker{display:inline-block;background:rgba(42,140,122,0.15);border:1px solid rgba(42,140,122,0.3);color:#4ECDB4;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:5px 14px;border-radius:100px;margin-bottom:16px}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,48px);color:#fff;line-height:1.15;margin-bottom:12px}
+.hero h1 em{color:#4ECDB4;font-style:normal}
+.hero-sub{color:rgba(255,255,255,0.6);font-size:15px;margin-bottom:8px}
+.hero-nota{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:100px;padding:6px 16px;color:#fff;font-size:13px;font-weight:600;margin-bottom:28px}
+.hero-nota span{color:#F59E0B;letter-spacing:2px}
+.btn{display:inline-flex;align-items:center;gap:8px;background:#2A8C7A;color:#fff;font-weight:700;font-size:15px;padding:14px 28px;border-radius:10px;text-decoration:none}
+.strip{background:#2A8C7A;padding:16px 24px;display:flex;justify-content:center;gap:clamp(16px,4vw,48px);flex-wrap:wrap}
+.strip-item{display:flex;align-items:center;gap:8px;color:#fff;font-size:13px;font-weight:600}
+.servicos{padding:56px 24px;background:#F7F5F0;text-align:center}
+.sec-label{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#2A8C7A;margin-bottom:10px}
+.sec-title{font-family:'Playfair Display',serif;font-size:clamp(24px,3vw,36px);color:#1A1A2E;margin-bottom:32px}
+.serv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;max-width:900px;margin:0 auto}
+.serv-card{background:#fff;border-radius:14px;padding:20px;border:1px solid #E5E0D8;text-align:left}
+.serv-card h3{font-weight:700;font-size:14px;color:#1A1A2E;margin-bottom:6px}
+.serv-card p{font-size:12.5px;color:#6B7280;line-height:1.5}
+.aval{padding:56px 24px;background:#fff;text-align:center}
+.aval-nota{font-family:'Playfair Display',serif;font-size:56px;font-weight:700;color:#1A1A2E;line-height:1}
+.aval-stars{color:#F59E0B;font-size:24px;letter-spacing:3px;display:block;margin:8px 0 4px}
+.aval-total{font-size:13px;color:#6B7280}
+.cta{background:linear-gradient(135deg,#0F1623,#1A2336);padding:56px 24px;text-align:center}
+.cta h2{font-family:'Playfair Display',serif;font-size:clamp(24px,3vw,36px);color:#fff;margin-bottom:12px}
+.cta p{color:rgba(255,255,255,0.6);font-size:15px;margin-bottom:28px}
+.wa-float{position:fixed;bottom:24px;right:24px;background:#25D366;color:#fff;width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;box-shadow:0 8px 24px rgba(37,211,102,0.4)}
+</style>
+</head>
+<body>
+<section class="hero">
+  <div class="hero-kicker">{{NICHO}} · {{CIDADE}}</div>
+  <h1>{{HEADLINE}}</h1>
+  <p class="hero-sub">{{SUBHEADLINE}}</p>
+  <div class="hero-nota"><span>★★★★★</span> {{NOTA}} · {{AVALIACOES}} avaliações no Google</div><br>
+  <a href="https://wa.me/{{WHATSAPP_CLIENTE}}?text=Olá! Vi seu perfil e gostaria de agendar uma consulta." class="btn">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.852L.057 23.885a.5.5 0 0 0 .611.611l6.042-1.476A11.953 11.953 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.96 0-3.786-.574-5.32-1.558l-.373-.232-3.862.944.97-3.743-.251-.389A9.946 9.946 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+    Falar pelo WhatsApp
+  </a>
+</section>
+<div class="strip">
+  {{STRIP_ITEMS}}
+</div>
+<section class="servicos">
+  <div class="sec-label">O que oferecemos</div>
+  <h2 class="sec-title">Nossos serviços</h2>
+  <div class="serv-grid">{{SERVICOS_CARDS}}</div>
+</section>
+<section class="aval">
+  <div class="sec-label">Avaliações</div>
+  <div class="aval-nota">{{NOTA}}</div>
+  <span class="aval-stars">★★★★★</span>
+  <div class="aval-total">{{AVALIACOES}} avaliações no Google</div>
+</section>
+<section class="cta">
+  <h2>Pronto para começar?</h2>
+  <p>Entre em contato pelo WhatsApp e agende sua consulta.</p>
+  <a href="https://wa.me/{{WHATSAPP_CLIENTE}}?text=Olá! Vi seu perfil e gostaria de agendar." class="btn">Agendar agora</a>
+</section>
+<a href="https://wa.me/{{WHATSAPP_CLIENTE}}" class="wa-float" target="_blank">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.852L.057 23.885a.5.5 0 0 0 .611.611l6.042-1.476A11.953 11.953 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.96 0-3.786-.574-5.32-1.558l-.373-.232-3.862.944.97-3.743-.251-.389A9.946 9.946 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+</a>
+</body>
+</html>
+</template>
 <section class="cta-final">
   <h2>Tudo pronto para aplicar hoje</h2>
   <p>Entregamos o documento completo em até 24h. Você aplica no painel do GMB ou a gente aplica por você.</p>
