@@ -1436,6 +1436,7 @@
               var email = l.email ? '<a href="mailto:' + l.email + '" style="color:var(--accent);font-size:11px;">✉️ E-mail</a>' : '';
               var nextSt = st === 'novo' ? 'abordado' : st === 'abordado' ? 'respondeu' : st === 'respondeu' ? 'fechado' : '';
               var btnNext = nextSt ? '<button onclick="atualizaGmb(\'' + l.slug + '\',{statusGmb:\'' + nextSt + '\'})" style="font-size:10px;padding:3px 10px;border:1px solid var(--line);border-radius:6px;background:var(--paper);cursor:pointer;font-family:var(--sans);color:var(--ink);">→ ' + nextSt.charAt(0).toUpperCase() + nextSt.slice(1) + '</button>' : '';
+              var btnDel = '<button onclick="if(confirm(\'Remover ' + l.nome.replace(/'/g,"\\'") + '?\')){fetch(\'/api/leads-gmb/\'+encodeURIComponent(\'' + l.slug + '\'),{method:\'DELETE\'}).then(function(){return fetch(\'/api/leads-gmb\',{cache:\'no-store\'}).then(function(r){return r.json()}).then(function(j){leadsGmb=j;render()})})}" style="font-size:10px;padding:3px 10px;border:1px solid var(--line);border-radius:6px;background:var(--paper);cursor:pointer;font-family:var(--sans);color:var(--red,#e53);">✕</button>';
               return '<div class="card" draggable="true" data-tipo="gmb" ondragstart="dragTipo=\'gmb\';dragIni(event,\'' + l.slug + '\')" ondragend="dragFim(event)" style="--cor:' + colColors[st] + ';cursor:grab">' +
                 '<div style="font-weight:700;font-size:13px;margin-bottom:4px;">' + l.nome + '</div>' +
                 '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;">' +
@@ -1444,7 +1445,7 @@
                 '</div>' +
                 (l.problemaGmb ? '<div style="font-size:11px;color:var(--warn);margin-bottom:6px;padding:3px 8px;background:var(--warn-soft);border-radius:6px;">⚠️ ' + l.problemaGmb + '</div>' : '') +
                 '<div class="acoes" style="margin-bottom:6px;">' + wa + tel + email + '</div>' +
-                '<div style="display:flex;justify-content:flex-end;">' + btnNext + '</div>' +
+                '<div style="display:flex;justify-content:flex-end;gap:6px;">' + btnNext + btnDel + '</div>' +
                 '</div>';
             }).join('') + '</div></div>';
         }).join('') + '</div>';
